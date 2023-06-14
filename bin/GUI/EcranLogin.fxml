@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.EcranLogin">
+   <children>
+      <Button fx:id="btconnexion" disable="${tfid.text.empty}" layoutX="262.0" layoutY="296.0" mnemonicParsing="false" onAction="#Verification" prefHeight="40.0" prefWidth="109.0" text="Connexion" />
+      <Label fx:id="labtitre" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="127.0" layoutY="14.0" prefHeight="46.0" prefWidth="360.0" text="Hopital de poche">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="labtitre1" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="183.0" layoutY="114.0" prefHeight="46.0" prefWidth="267.0" text="Authentification">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfid" layoutX="242.0" layoutY="200.0" promptText="Identifiant" />
+      <Label fx:id="laberreurmp" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="137.0" layoutY="351.0" prefHeight="34.0" prefWidth="360.0" textFill="#c40707">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfmps" layoutX="241.0" layoutY="249.0" promptText="Mot de passe" />
+   </children>
+</AnchorPane>

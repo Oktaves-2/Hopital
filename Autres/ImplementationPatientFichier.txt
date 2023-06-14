@@ -1,0 +1,75 @@
+public static TreeMap<String, Patient> ImplementationPatients(File fichierRegistre)
+            throws IOException, ParseException {
+
+        FileReader fr = new FileReader(fichierRegistre);
+        StringBuilder sequences = new StringBuilder();
+        TreeMap<String, Patient> implementationPatients = new TreeMap<>();
+        int ci = 0;
+        char carac = (char) ci;
+        String idPatient = "";
+        String mpasse = "";
+        String nom = "";
+        String prenom = "";
+        String email = "";
+        String adresse = "";
+        Date naissance = null;
+        ci = fr.read();
+        carac = (char) ci;
+        while (ci != -1) {
+            sequences.setLength(0);
+            for (int i = 0; i <= 7; i = i + 1) {
+                sequences.setLength(0);
+                while (carac != ';' && ci != -1 && carac != '\n' && carac != '\r') {
+                    sequences.append(carac);
+                    ci = fr.read();
+                    carac = (char) ci;
+                }
+                switch (i) {
+                    case 0:
+                        idPatient = sequences.toString();
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+                    case 1:
+                        mpasse = sequences.toString();
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+                    case 2:
+                        nom = sequences.toString();
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+
+                    case 3:
+                        prenom = sequences.toString();
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+                    case 4:
+                        naissance = new SimpleDateFormat("dd/MM/yyyy").parse(sequences.toString());
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+                    case 5:
+                        adresse = sequences.toString();
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+                    case 6:
+                        email = sequences.toString();
+                        ci = fr.read();
+                        carac = (char) ci;
+                        break;
+                }
+            }
+            Patient patient = new Patient(idPatient, nom, prenom, naissance, adresse, email, mpasse);
+            implementationPatients.put(idPatient, patient);
+            while (carac == '\n' || carac == '\r') {
+                ci = fr.read();
+                carac = (char) ci;
+            }
+        }
+        fr.close();
+        return implementationPatients;
+    }

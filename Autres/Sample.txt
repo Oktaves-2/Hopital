@@ -1,0 +1,214 @@
+package Base;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Sample {
+    
+
+
+
+	private static Connection conn = null;
+
+	public static void main(String[] args) {
+		try {
+			OuvertureConnection();
+			Requete();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			FermetureConnection();
+		}
+
+	}
+
+	public static void OuvertureConnection() throws SQLException {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/base_hopital", "root", "");
+		} catch (ClassNotFoundException e) {
+			throw new SQLException("Impossible de trouver le driver JDBC : " + e.getMessage());
+		}
+	}
+
+	public static void FermetureConnection() {
+		try {
+			if (conn != null) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			// Exception ignoree
+		}
+	}
+
+	public void ChargementPatient() throws SQLException {
+
+		Statement stmt = conn.createStatement();
+		String sql = "SELECT * FROM patients";
+		ResultSet rs = stmt.executeQuery(sql);
+		ResultSetMetaData rsmd = rs.getMetaData();
+		System.out.print(rsmd.getColumnCount());
+		while (rs.next()) {
+			//System.out.print(rs.getString("idPatient"));
+			// System.out.print(" firstname " + rs.getString("firstname"));
+			// System.out.print(" city " + rs.getString("city"));
+			// System.out.println("salary " + rs.getInt("salary"));
+		}
+	}
+
+
+	public static void Requete() throws SQLException {
+		
+		Statement stmt = conn.createStatement();
+		String sql = "SELECT * FROM patients";
+		ResultSet rs = stmt.executeQuery(sql);
+		ResultSetMetaData rsmd = rs.getMetaData();
+		System.out.print( rsmd.getTableName(1));
+		while (rs.next()) {
+		//	System.out.print(rs.getString("idPatient"));
+			// System.out.print(" firstname " + rs.getString("firstname"));
+			// System.out.print(" city " + rs.getString("city"));
+			// System.out.println("salary " + rs.getInt("salary"));
+		}
+	}
+
+}
+// C:\Users\Oktaves\Documents\Code\JDBC\Test2\src\TpJdbc_Local.java tp tp001
+
+
+@Override
+    public void start(Stage stage) throws Exception {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("EcranLogin.fxml"));
+            Scene scenelog = new Scene(root);
+            Image image = new Image("C:/Users/Oktaves/Documents/Code/Java/L2/Hopital/Autres/cat.jpg");
+            // Image image2 = new Image ("Autres/cat.jpg");
+            stage.getIcons().add(image);
+            scenelog.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
+            stage.setScene(scenelog);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void ChangementEcran(ActionEvent ev, String role, CachedRowSet rw) throws IOException, SQLException {
+        try {
+            Stage stage = new Stage();
+            String Ecran = "Ecran" + role + ".fxml";
+            FXMLLoader loader = new FXMLLoader(Interfaces.class.getResource(Ecran));
+            Parent root = loader.load();
+            stage = (Stage) ((Node) ev.getSource()).getScene().getWindow();
+            Scene scenecent = new Scene(root);
+            scenecent.getStylesheets().add(Interfaces.class.getResource("Style.css").toExternalForm());
+            stage.setScene(scenecent);
+            stage.show();
+
+            switch (role) {
+                case ("Medecin"):
+                    break;
+                case ("Patient"):
+                    EcranPatient ecranPatient = loader.getController();
+                    ecranPatient.RemplissageInformations(rw);
+            }
+        } catch (
+
+        Exception e) {
+            System.out.println(e);
+        }
+    }
+
+}
+
+public int RechercheParCoordones(ActionEvent ev) throws SQLException, NullPointerException, IOException {
+        Connection conn = LienBase.OuvertureConnection();
+        try {
+            nomentree = tfnom.getText();
+            prenomentree = tfprenom.getText();
+            PreparedStatement pstmt = conn
+                    .prepareStatement(
+                            "SELECT prenom, nom, idPatient, naissance, email, adresse from patients where nom = ?");
+            pstmt.setString(1, nomentree);
+            ResultSet rs = pstmt.executeQuery();
+            RowSetFactory factory = RowSetProvider.newFactory();
+            CachedRowSet rw = factory.createCachedRowSet();
+            rw.populate(rs);
+            rw.next();
+            if (prenomentree.equals(rw.getString("prenom"))) {
+                LienBase.FermetureConnection(conn);
+                Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Patient", rw);
+                return 0;
+            }
+        } catch (Exception e) {
+        }
+        laberreurmed.setText("Aucun compte existant pour ces coordones");
+        LienBase.FermetureConnection(conn);
+        return -1;
+    }
+
+    public int RechercheParId(ActionEvent ev) throws IOException, SQLException {
+        Connection conn = LienBase.OuvertureConnection();
+        try {
+            identree = tfidm.getText();
+            PreparedStatement pstmt = conn
+                    .prepareStatement(
+                            "SELECT prenom, nom, idPatient, naissance, email, adresse from patients where idPatient = ?");
+            pstmt.setString(1, identree);
+            ResultSet rs = pstmt.executeQuery();
+            RowSetFactory factory = RowSetProvider.newFactory();
+            CachedRowSet rw = factory.createCachedRowSet();
+            rw.populate(rs);
+            rw.next();
+            if (identree.equals(rw.getString("idPatient"))) {
+                LienBase.FermetureConnection(conn);
+                Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Patient", rw);
+                return 0;
+            }
+
+        } catch (Exception e) {
+        }
+        laberreurmed.setText("Aucun compte existant pour cet identifiant");
+        LienBase.FermetureConnection(conn);
+        return -1;
+    }
+
+
+
+    
+    public void generateLineChart(ActionEvent ae) {
+        lineChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
+        series.getData().add(new XYChart.Data<String, Number>("Jan", 200));
+        series.getData().add(new XYChart.Data<String, Number>("Feb", 100));
+        series.getData().add(new XYChart.Data<String, Number>("Mar", 300));
+        series.getData().add(new XYChart.Data<String, Number>("Apr", 400));
+        series.setName("Month Pay");
+        lineChart.getData().add(series);
+    }
+
+    while (rs2.next()) {
+                XYChart.Series<String, Integer> Series = new XYChart.Series<>();
+                    Series.setName(rs2.getString("nom"));
+                    rw.beforeFirst();
+                    while (rw.next()) {
+                        for (int i = 2018; i < Year.now().getValue(); i++) {
+                        if (rw.getString("nom").equals(rs2.getString("nom")) && rw.getInt("an") == (i)) {
+                            Series.getData()
+                                    .add(new XYChart.Data<>(Integer.toString(rw.getInt("an")),
+                                            rw.getInt("compte")));
+                                            System.out.println(rw.getString("nom")+"  "+rw.getInt("an")+"  "+ rw.getInt("compte"));
+                        }
+                    }
+                }
+                ChartCasParAnParPaths.getData().add(Series);
+            }
+
+            pieChartData.forEach(data -> data.nameProperty().bind(
+                    Bindings.concat(
+                            data.getName(), " ", data.pieValueProperty(), " consultations")));
+            ChartConsParPeriode.setData(pieChartData);

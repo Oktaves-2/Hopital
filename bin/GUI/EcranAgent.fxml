@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.EcranAgent">
+   <children>
+      <Button fx:id="Examnom" disable="${tfnom.text.empty}" layoutX="428.0" layoutY="297.0" mnemonicParsing="false" onAction="#RechercheParCoordones" prefHeight="40.0" prefWidth="150.0" text="Recherche" />
+      <Label fx:id="labtitre" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="34.0" prefWidth="234.0" text="Hopital de poche">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="labrcnom" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="118.0" prefHeight="66.0" prefWidth="162.0" text="Recherche par &#10;nom et prenom&#10;" textAlignment="CENTER">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfnom" layoutX="429.0" layoutY="200.0" promptText="nom" />
+      <TextField fx:id="tfprenom" layoutX="429.0" layoutY="251.0" promptText="prenom" />
+      <Label fx:id="labprof" layoutX="15.0" layoutY="33.0" prefHeight="34.0" prefWidth="282.0" text="Connecté en tant qu'agent administratif">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="labrcid" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="230.0" layoutY="118.0" prefHeight="66.0" prefWidth="173.0" text="Recherche par&#10; identifiant" textAlignment="CENTER">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfidm" layoutX="242.0" layoutY="251.0" promptText="identifiant" />
+      <Button fx:id="Examid" disable="${tfidm.text.empty}" layoutX="242.0" layoutY="297.0" mnemonicParsing="false" onAction="#RechercheParCoordones" prefHeight="40.0" prefWidth="150.0" text="Recherche" />
+      <Label fx:id="labrcreg" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="118.0" prefHeight="66.0" prefWidth="174.0" text="Recherche depuis&#10;registre" textAlignment="CENTER">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <ListView fx:id="listreg" layoutX="14.0" layoutY="190.0" prefHeight="179.0" prefWidth="200.0" />
+      <Button fx:id="Creer" layoutX="242.0" layoutY="348.0" mnemonicParsing="false" onAction="#CreerCompte" prefHeight="40.0" prefWidth="339.0" text="Créer un compte patient" />
+      <TextField fx:id="tfpath" layoutX="14.0" layoutY="368.0" prefHeight="26.0" prefWidth="200.0" promptText="Filtrer par pathologie" />
+      <Button fx:id="btretourlog" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourLog" prefHeight="24.0" prefWidth="141.0" text="Retour  écran login" textAlignment="CENTER">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

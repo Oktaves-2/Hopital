@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.EcranCreationConsultation">
+   <children>
+      <Label fx:id="labtitre" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="34.0" prefWidth="243.0" text="Hopital de poche">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="laberreurmp" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="137.0" layoutY="351.0" prefHeight="34.0" prefWidth="360.0" textFill="#c40707">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="labcoordones" layoutX="14.0" layoutY="46.0" prefHeight="154.0" prefWidth="288.0" text="Patient : &#10;Naissance :&#10;Adresse :&#10;Email :">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="btexport" layoutX="480.0" layoutY="173.0" mnemonicParsing="false" onAction="#Export" prefHeight="46.0" prefWidth="114.0" text="Exporter &#10;Ordonnance" textAlignment="CENTER" />
+      <TextArea fx:id="txtord" layoutX="8.0" layoutY="225.0" prefHeight="168.0" prefWidth="583.0" promptText="Ordonnance détaillée" />
+      <Button fx:id="retourpat" layoutX="450.0" layoutY="9.0" mnemonicParsing="false" onAction="#RetourPat" prefHeight="27.0" prefWidth="142.0" text="Retour écran patient" textAlignment="CENTER">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <Button fx:id="btenregistrer" layoutX="356.0" layoutY="173.0" mnemonicParsing="false" onAction="#Enregistrer" prefHeight="46.0" prefWidth="114.0" text="Enregistrer &#10;Consultation" textAlignment="CENTER" />
+      <TextField fx:id="tfidcons" editable="false" layoutX="8.0" layoutY="187.0" promptText="idCons" />
+      <Label fx:id="labprof" layoutX="15.0" layoutY="33.0" prefHeight="34.0" prefWidth="282.0" text="Connecté en tant qu'agent administratif">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfcout" editable="false" layoutX="174.0" layoutY="187.0" promptText="cout (defaut = 35)" />
+   </children>
+</AnchorPane>
