@@ -36,8 +36,7 @@ public class EcranCreationPatient implements Initializable {
     public void RemplissageInformations() throws SQLException {
 
         CachedRowSet rw = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwLogin();
-        labprof.setText("Connecte en tant que: " + rw.getString("profession") + " ("
-                + rw.getString("id") + ")");
+        labprof.setText("Connecté en tant qu'agent (" + rw.getString("id") + ") [" + rw.getString("role") + "]");
     }
 
     public void Creation(ActionEvent ev) throws SQLException {

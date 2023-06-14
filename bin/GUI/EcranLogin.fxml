@@ -26,5 +26,6 @@
          </font>
       </Label>
       <TextField fx:id="tfmps" layoutX="241.0" layoutY="249.0" promptText="Mot de passe" />
+      <Button fx:id="btstats" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#Stats" prefHeight="18.0" prefWidth="96.0" text="Statistiques" />
    </children>
 </AnchorPane>

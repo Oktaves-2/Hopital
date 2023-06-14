@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,13 +23,11 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class EcranModifierInformations implements Initializable {
+public class EcranCreationPersonnel implements Initializable {
     @FXML
-    private DatePicker dpnaissance1;
+    private DatePicker dpnaissance;
     @FXML
-    private TextField tfnom, tfprenom, tfadresse, tfemail, tfidentifiant, tfnaissance;
-    @FXML
-    private TextField tfnom1, tfprenom1, tfadresse1, tfemail1;
+    private TextField tfnom, tfprenom, tfadresse, tfemail, tfidentifiant, tfprof, tfrole;
     @FXML
     private Button Creer, btretourlog;
     @FXML
@@ -40,46 +37,32 @@ public class EcranModifierInformations implements Initializable {
 
         CachedRowSet rw = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwLogin();
         labprof.setText("Connecté en tant qu'agent (" + rw.getString("id") + ") [" + rw.getString("role") + "]");
-        CachedRowSet rw2 = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwPat();
-        tfnom.setText(rw2.getString("nom"));
-        tfprenom.setText(rw2.getString("prenom"));
-        tfadresse.setText(rw2.getString("adresse"));
-        tfemail.setText(rw2.getString("email"));
-        tfidentifiant.setText(rw2.getString("idPatient"));
-        tfnaissance.setText(rw2.getDate("naissance").toString());
-
     }
 
-    public void MiseAJour(ActionEvent ev) throws SQLException {
+    public void Creation(ActionEvent ev) throws SQLException {
+        if (tfnom.getText().trim().isEmpty() || tfprenom.getText().trim().isEmpty()
+                || tfadresse.getText().trim().isEmpty()
+                || tfemail.getText().trim().isEmpty() || tfadresse.getText().trim().isEmpty()) {
+            laberr.setText("Un ou plusieurs champs sont vides");
+            return;
+        }
         try {
             Connection conn = LienBase.OuvertureConnection();
             PreparedStatement pstmt = conn
-                    .prepareStatement(
-                            "UPDATE patients set nom = ?, prenom = ?, naissance = ?, adresse = ?, email = ? where idPatient = ?");
-            if (tfnom1.getText().trim().isEmpty())
-                pstmt.setString(1, tfnom.getText());
-            else
-                pstmt.setString(1, tfnom1.getText());
-            if (tfprenom1.getText().trim().isEmpty())
-                pstmt.setString(2, tfprenom.getText());
-            else
-                pstmt.setString(2, tfprenom1.getText());
-            if (dpnaissance1.getValue() == null)
-                pstmt.setDate(3, java.sql.Date.valueOf(LocalDate.parse(tfnaissance.getText())));
-            else
-                pstmt.setDate(3, java.sql.Date.valueOf(dpnaissance1.getValue()));
-            if (tfadresse1.getText().trim().isEmpty())
-                pstmt.setString(4, tfadresse.getText());
-            else
-                pstmt.setString(4, tfadresse1.getText());
-            if (tfemail1.getText().trim().isEmpty())
-                pstmt.setString(5, tfemail.getText());
-            else
-                pstmt.setString(5, tfemail1.getText());
-
-            pstmt.setString(6, tfidentifiant.getText());
+                    .prepareStatement("INSERT INTO personnel VALUES(?,?,?,?,?,?,?,?,?)");
+            pstmt.setString(1, tfidentifiant.getText());
+            pstmt.setString(2, tfnom.getText());
+            pstmt.setString(3, tfprenom.getText());
+            pstmt.setDate(4, java.sql.Date.valueOf(dpnaissance.getValue()));
+            pstmt.setString(5, tfadresse.getText());
+            pstmt.setString(6, tfemail.getText());
+            int randomNum = 0;
+            randomNum = ThreadLocalRandom.current().nextInt(0, 999);
+            pstmt.setString(7, tfprenom.getText().charAt(tfprenom.getText().length()-1) + randomNum + "" + tfnom.getText().charAt(0));
+            pstmt.setString(8, tfprof.getText());
+            pstmt.setString(9, tfrole.getText());
             pstmt.executeUpdate();
-            laberr.setText("Informations modifiées");
+            laberr.setText("Personnel bien enregistré");
             laberr.setVisible(true);
 
             LienBase.FermetureConnection(conn);
@@ -97,7 +80,10 @@ public class EcranModifierInformations implements Initializable {
         tfnom.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                String id = ("P" + Character.toUpperCase(newValue.charAt(0)));
+                if (tfprof.getText().trim().isEmpty())
+
+                    return;
+                String id = (tfprof.getText().charAt(0) + "" + Character.toUpperCase(newValue.charAt(0)));
                 int randomNum = 0;
                 boolean inexistant = false;
                 while (inexistant == false) {
@@ -121,6 +107,6 @@ public class EcranModifierInformations implements Initializable {
     }
 
     public void RetourPat(ActionEvent ev) throws IOException, SQLException {
-        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Agent");
+        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "AgentPers");
     }
 }

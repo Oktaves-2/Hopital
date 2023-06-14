@@ -32,7 +32,7 @@ public class EcranLogin {
         try {
             String identree = tfid.getText();
             String mpentree = tfmps.getText();
-            PreparedStatement pstmt = conn.prepareStatement("SELECT mpasse,profession, id from personnel where id = ?");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * from personnel where id = ?");
             pstmt.setString(1, identree);
             ResultSet rs = pstmt.executeQuery();
             RowSetFactory factory = RowSetProvider.newFactory();
@@ -54,5 +54,9 @@ public class EcranLogin {
         }
         LienBase.FermetureConnection(conn);
         return -1;
+    }
+
+    public void Stats(ActionEvent ev) throws IOException, SQLException {
+        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Statistiques");
     }
 }

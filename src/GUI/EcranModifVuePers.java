@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 import Base.LienBase;
 
-public class EcranModifVuePatient {
+public class EcranModifVuePers {
     @FXML
     private Label labcoordones, labprof;
     @FXML
@@ -21,23 +21,25 @@ public class EcranModifVuePatient {
     public void RemplissageInformations() throws SQLException {
         CachedRowSet rw = ((Donnees) labcoordones.getScene().getWindow().getUserData()).getrwPat();
         CachedRowSet rw1 = ((Donnees) labcoordones.getScene().getWindow().getUserData()).getrwLogin();
-        labprof.setText("Connecte en tant qu'Agent(" + rw1.getString("id")+")");
+        labprof.setText("Connecté en tant qu'agent (" + rw1.getString("id") + ") [" + rw1.getString("role") + "]");
         labcoordones.setText(
-                "Patient: " + rw.getString("prenom") + " " + rw.getString("nom") + " (" + rw.getString("idPatient")
+                "Personnel: " + rw.getString("prenom") + " " + rw.getString("nom") + " (" + rw.getString("id")
                         + ")\nNaissance: " + rw.getDate("naissance")
                         + "\nAdresse: " + rw.getString("adresse")
-                        + "\nEmail: " + rw.getString("email"));
+                        + "\nEmail: " + rw.getString("email")
+                        + "\nProfession: " + rw.getString("profession")
+                        + "\nRole: " + rw.getString("role"));
     }
 
     public void Retour(ActionEvent ev) throws IOException, SQLException {
-        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Agent");
+        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "AgentPers");
     }
 
     public void Supprimer(ActionEvent ev) {
         try {
             Connection conn = LienBase.OuvertureConnection();
             PreparedStatement pstmt = conn
-                    .prepareStatement("DELETE FROM patients where idPatient = ?");
+                    .prepareStatement("DELETE FROM personnel where id = ?");
             String id = "";
             id = labcoordones.getText();
             id = id.substring(id.lastIndexOf("(") + 1, id.lastIndexOf(")"));
@@ -50,7 +52,7 @@ public class EcranModifVuePatient {
     }
 
     public void ModifierInformations(ActionEvent ev) throws IOException, SQLException {
-        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "ModifierInformations");
+        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "ModifierInformationsPers");
 
     }
 }

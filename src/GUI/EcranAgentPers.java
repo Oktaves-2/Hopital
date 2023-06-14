@@ -12,44 +12,60 @@ import java.util.ResourceBundle;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetFactory;
 import javax.sql.rowset.RowSetProvider;
-
 import Base.LienBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 
-public class EcranMedecin implements Initializable {
+public class EcranAgentPers
+        implements Initializable {
 
     @FXML
-    private TextField tfnom, tfprenom, tfidm, tfpath;
+    private TextField tfnom, tfprenom, tfidm;
+
     @FXML
     private Label laberreurmed, labprof;
     @FXML
     private ListView<String> listreg;
     @FXML
     private Button Examnom, Examid, Creer;
+    @FXML
+    private MenuButton menurecherche;
     private String entree1;
     private String entree2;
     private PreparedStatement pstmt;
     private Statement stmt;
-    int x;
 
-    public void remplissageInformations() throws SQLException {
-
-        
-          CachedRowSet rw = ((Donnees)
-          labprof.getScene().getWindow().getUserData()).getrwLogin();
-          labprof.setText("Connecte en tant que: " + rw.getString("profession") + " ("
-          + rw.getString("id") + ")");
-         
+    public void RemplissageInformations() throws SQLException {
+        CachedRowSet rw = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwLogin();
+        labprof.setText("Connecté en tant qu'agent (" + rw.getString("id") + ") [" + rw.getString("role") + "]");
+        if (!rw.getString("role").equals("SuperAdmin"))
+            menurecherche.setVisible(false);
+        MenuItem recherchepat = new MenuItem("RecherchePatient");
+        menurecherche.getItems().clear();
+        menurecherche.getItems().add(recherchepat);
+        recherchepat.setOnAction(eventreccpers);
     }
+
+    EventHandler<ActionEvent> eventreccpers = new EventHandler<ActionEvent>() {
+        public void handle(ActionEvent ev) {
+            try {
+                Interfaces.ChangementEcran((labprof).getScene(), "Agent");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    };
 
     public int RechercheParCoordones(ActionEvent ev) throws SQLException, NullPointerException, IOException {
         Connection conn = LienBase.OuvertureConnection();
@@ -59,13 +75,13 @@ public class EcranMedecin implements Initializable {
                 entree2 = tfprenom.getText();
                 pstmt = conn
                         .prepareStatement(
-                                "SELECT * from patients where nom = ?");
+                                "SELECT * from personnel where nom = ?");
                 pstmt.setString(1, entree1);
             } else if (ev.getSource() == Examid) {
                 entree1 = tfidm.getText();
                 pstmt = conn
                         .prepareStatement(
-                                "SELECT * from patients where idPatient = ?");
+                                "SELECT * from personnel where id = ?");
                 pstmt.setString(1, entree1);
             }
             ResultSet rs = pstmt.executeQuery();
@@ -76,7 +92,7 @@ public class EcranMedecin implements Initializable {
             rw.next();
             if (entree1.equals(rw.getString("idPatient")) || entree2.equals(rw.getString("prenom"))) {
                 LienBase.FermetureConnection(conn);
-                Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Patient");
+                Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "ModifVuePers");
                 return 0;
             }
         } catch (Exception e) {
@@ -87,6 +103,10 @@ public class EcranMedecin implements Initializable {
         return -1;
     }
 
+    public void CreerCompte(ActionEvent ev) throws IOException, SQLException {
+        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "CreationPersonnel");
+    }
+
     public void SelectionListe() throws IOException, SQLException {
         String nomprenom = listreg.getSelectionModel().getSelectedItem();
         String[] npsepare = nomprenom.split(" ");
@@ -95,7 +115,7 @@ public class EcranMedecin implements Initializable {
         Connection conn = LienBase.OuvertureConnection();
         pstmt = conn
                 .prepareStatement(
-                        "SELECT * from patients where nom = ?");
+                        "SELECT * from personnel where nom = ?");
         pstmt.setString(1, entree1);
         ResultSet rs = pstmt.executeQuery();
         RowSetFactory factory = RowSetProvider.newFactory();
@@ -104,13 +124,7 @@ public class EcranMedecin implements Initializable {
         ((Donnees) labprof.getScene().getWindow().getUserData()).setrwPat(rw);
         rw.next();
         LienBase.FermetureConnection(conn);
-        try {
-            Interfaces.ChangementEcran(listreg.getScene(), "Patient");
-        } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
-        }
-
+        Interfaces.ChangementEcran(listreg.getScene(), "ModifVuePers");
     }
 
     public void RetourLog(ActionEvent ev) throws IOException, SQLException {
@@ -120,9 +134,8 @@ public class EcranMedecin implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try (Connection conn = LienBase.OuvertureConnection()) {
-
             stmt = conn.createStatement();
-            String sql = "SELECT * FROM patients";
+            String sql = "SELECT * FROM personnel";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 listreg.getItems().add(rs.getString("nom") + " " + rs.getString("prenom"));
@@ -142,47 +155,6 @@ public class EcranMedecin implements Initializable {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        tfpath.textProperty().addListener(new ChangeListener<String>() {
-
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                listreg.getItems().clear();
-                try (Connection conn = LienBase.OuvertureConnection()) {
-                    if (newValue.trim().isEmpty()) {
-                        pstmt = conn
-                                .prepareStatement(
-                                        "SELECT DISTINCT p.prenom, p.nom from patients p");
-                    } else {
-                        pstmt = conn
-                                .prepareStatement(
-                                        "SELECT DISTINCT p.prenom, p.nom, p.idPatient, pa.nom from patients p, pathologie pa, malades m where pa.nom LIKE ? AND pa.idPathologie = m.idPathologie And p.idPatient = m.idPatient");
-                        pstmt.setString(1, newValue + "%");
-                    }
-                    ResultSet rs = pstmt.executeQuery();
-
-                    while (rs.next()) {
-                        if (newValue.trim().isEmpty()) {
-                            listreg.getItems().add(
-                                    rs.getString("p.nom") + " " + rs.getString("p.prenom"));
-
-                        } else {
-                            listreg.getItems().add(
-                                    rs.getString("p.nom") + " " + rs.getString("p.prenom") + " ("
-                                            + rs.getString("pa.nom") + ")");
-                        }
-                    }
-
-                    RowSetFactory factory = RowSetProvider.newFactory();
-                    CachedRowSet rwPat = factory.createCachedRowSet();
-                    rwPat.populate(rs);
-                    ((Donnees) labprof.getScene().getWindow().getUserData()).setrwPat(rwPat);
-                    LienBase.FermetureConnection(conn);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-
-            }
-        });
     }
 
 }

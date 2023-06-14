@@ -12,17 +12,19 @@ import java.util.ResourceBundle;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetFactory;
 import javax.sql.rowset.RowSetProvider;
-
 import Base.LienBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 
 public class EcranAgent
@@ -37,16 +39,33 @@ public class EcranAgent
     private ListView<String> listreg;
     @FXML
     private Button Examnom, Examid, Creer;
+    @FXML
+    private MenuButton menurecherche;
     private String entree1;
     private String entree2;
     private PreparedStatement pstmt;
     private Statement stmt;
 
     public void RemplissageInformations() throws SQLException {
-
         CachedRowSet rw = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwLogin();
-        labprof.setText("Connecté en tant qu'Agent (" + rw.getString("id") + ")");
+        labprof.setText("Connecté en tant qu'agent (" + rw.getString("id") + ") ["+rw.getString("role")+"]");
+        if (!rw.getString("role").equals("SuperAdmin"))
+            menurecherche.setVisible(false);
+        MenuItem recherchepers = new MenuItem("RecherchePersonnel");
+        menurecherche.getItems().clear();
+        menurecherche.getItems().add(recherchepers);
+        recherchepers.setOnAction(eventreccpers);
     }
+
+    EventHandler<ActionEvent> eventreccpers = new EventHandler<ActionEvent>() {
+        public void handle(ActionEvent ev) {
+            try {
+                Interfaces.ChangementEcran(( labprof).getScene(), "AgentPers");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    };
 
     public int RechercheParCoordones(ActionEvent ev) throws SQLException, NullPointerException, IOException {
         Connection conn = LienBase.OuvertureConnection();

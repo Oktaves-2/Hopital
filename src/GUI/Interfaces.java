@@ -68,13 +68,26 @@ public class Interfaces extends Application {
                     EcranAgent ecranAgent = loader.getController();
                     ecranAgent.RemplissageInformations();
                     break;
+                case ("AgentPers"):
+                    EcranAgentPers ecranAgentPers = loader.getController();
+                    ecranAgentPers.RemplissageInformations();
+                    break;
                 case ("ModifVuePatient"):
                     EcranModifVuePatient ecranModifVuePatient = loader.getController();
                     ecranModifVuePatient.RemplissageInformations();
                     break;
+                case ("ModifVuePers"):
+                    EcranModifVuePers ecranModifVuePers = loader.getController();
+                    ecranModifVuePers.RemplissageInformations();
+                    break;
+
                 case ("CreationPatient"):
                     EcranCreationPatient ecranCreationPatient = loader.getController();
                     ecranCreationPatient.RemplissageInformations();
+                    break;
+                case ("CreationPers"):
+                    EcranCreationPersonnel ecranCreationPersonnel = loader.getController();
+                    ecranCreationPersonnel.RemplissageInformations();
                     break;
                 case ("CreationConsultation"):
                     EcranCreationConsultation ecranCreationConsultation = loader.getController();
@@ -83,6 +96,10 @@ public class Interfaces extends Application {
                 case ("ModifierInformations"):
                     EcranModifierInformations ecranModifierInformations = loader.getController();
                     ecranModifierInformations.RemplissageInformations();
+                    break;
+                case ("ModifierInformationsPers"):
+                    EcranModifierInformationsPers ecranModifierInformationsPers = loader.getController();
+                    ecranModifierInformationsPers.RemplissageInformations();
                     break;
 
             }

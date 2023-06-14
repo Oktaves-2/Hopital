@@ -30,7 +30,7 @@ public class EcranCreationConsultation {
     public void RemplissageInformations() throws SQLException {
         CachedRowSet rw = ((Donnees) labcoordones.getScene().getWindow().getUserData()).getrwPat();
         CachedRowSet rw1 = ((Donnees) labcoordones.getScene().getWindow().getUserData()).getrwLogin();
-        labprof.setText("Connecte en tant que Médecin (" + rw1.getString("id")+")");
+        labprof.setText("Connécté en tant que médecin (" + rw1.getString("id")+")");
         labcoordones.setText(
                 "Patient: " + rw.getString("prenom") + " " + rw.getString("nom") + " (" + rw.getString("idPatient")
                         + ")\nNaissance: " + rw.getDate("naissance")
