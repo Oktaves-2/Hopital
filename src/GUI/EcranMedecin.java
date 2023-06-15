@@ -25,6 +25,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+/**
+ * La classe assigne au stage une seconde donnee qui est le cachedrowset sql
+ * contenant les informations du patients recherché
+ * Elle propose 3 plateformes de recherches différentes qui servent toutes
+ * d'intermediaires vers l'écran patient qui permet de gerer les consultations
+ * du patient choisi.
+ */
 public class EcranMedecin implements Initializable {
 
     @FXML
@@ -43,12 +50,10 @@ public class EcranMedecin implements Initializable {
 
     public void remplissageInformations() throws SQLException {
 
-        
-          CachedRowSet rw = ((Donnees)
-          labprof.getScene().getWindow().getUserData()).getrwLogin();
-          labprof.setText("Connecte en tant que: " + rw.getString("profession") + " ("
-          + rw.getString("id") + ")");
-         
+        CachedRowSet rw = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwLogin();
+        labprof.setText("Connecte en tant que: " + rw.getString("profession") + " ("
+                + rw.getString("id") + ")");
+
     }
 
     public int RechercheParCoordones(ActionEvent ev) throws SQLException, NullPointerException, IOException {
@@ -59,13 +64,13 @@ public class EcranMedecin implements Initializable {
                 entree2 = tfprenom.getText();
                 pstmt = conn
                         .prepareStatement(
-                                "SELECT * from patients where nom = ?");
+                                "SELECT * from patient where nom = ?");
                 pstmt.setString(1, entree1);
             } else if (ev.getSource() == Examid) {
                 entree1 = tfidm.getText();
                 pstmt = conn
                         .prepareStatement(
-                                "SELECT * from patients where idPatient = ?");
+                                "SELECT * from patient where idPatient = ?");
                 pstmt.setString(1, entree1);
             }
             ResultSet rs = pstmt.executeQuery();
@@ -95,7 +100,7 @@ public class EcranMedecin implements Initializable {
         Connection conn = LienBase.OuvertureConnection();
         pstmt = conn
                 .prepareStatement(
-                        "SELECT * from patients where nom = ?");
+                        "SELECT * from patient where nom = ?");
         pstmt.setString(1, entree1);
         ResultSet rs = pstmt.executeQuery();
         RowSetFactory factory = RowSetProvider.newFactory();
@@ -122,7 +127,7 @@ public class EcranMedecin implements Initializable {
         try (Connection conn = LienBase.OuvertureConnection()) {
 
             stmt = conn.createStatement();
-            String sql = "SELECT * FROM patients";
+            String sql = "SELECT * FROM patient";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 listreg.getItems().add(rs.getString("nom") + " " + rs.getString("prenom"));
@@ -151,11 +156,11 @@ public class EcranMedecin implements Initializable {
                     if (newValue.trim().isEmpty()) {
                         pstmt = conn
                                 .prepareStatement(
-                                        "SELECT DISTINCT p.prenom, p.nom from patients p");
+                                        "SELECT DISTINCT p.prenom, p.nom from patient p");
                     } else {
                         pstmt = conn
                                 .prepareStatement(
-                                        "SELECT DISTINCT p.prenom, p.nom, p.idPatient, pa.nom from patients p, pathologie pa, malades m where pa.nom LIKE ? AND pa.idPathologie = m.idPathologie And p.idPatient = m.idPatient");
+                                        "SELECT DISTINCT p.prenom, p.nom, p.idPatient, pa.nom from patient p, pathologie pa, malade m where pa.nom LIKE ? AND pa.idPathologie = m.idPathologie And p.idPatient = m.idPatient");
                         pstmt.setString(1, newValue + "%");
                     }
                     ResultSet rs = pstmt.executeQuery();

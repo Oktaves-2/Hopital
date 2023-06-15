@@ -12,6 +12,12 @@ import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 import Base.LienBase;
 
+/**
+ * Cet ecran au faible nombre de methodes est juste un intermediaire vers
+ * l'ecran permettant de modifier les informations d'un membre du personnel supprimer un
+ * membre du personnel ne necessite le lancement d'aucun ecran et renvoi donc au
+ * precedent
+ */
 public class EcranModifVuePers {
     @FXML
     private Label labcoordones, labprof;

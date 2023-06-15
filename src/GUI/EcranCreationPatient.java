@@ -6,9 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.concurrent.ThreadLocalRandom;
-
 import javax.sql.rowset.CachedRowSet;
 
 import Base.LienBase;
@@ -23,6 +22,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * La classe permet la création d'un patient, la categorie identifiant n'est pas
+ * editable,
+ * en effet, l'identifiant est généré automatiquement à partir de
+ * la premiere lettre du nom du patient est d'un integer aléatoire dont une
+ * requete sql a verifie l'unicité
+ */
 public class EcranCreationPatient implements Initializable {
     @FXML
     private DatePicker dpnaissance;
@@ -49,7 +55,7 @@ public class EcranCreationPatient implements Initializable {
         try {
             Connection conn = LienBase.OuvertureConnection();
             PreparedStatement pstmt = conn
-                    .prepareStatement("INSERT INTO patients VALUES(?,?,?,?,?,?)");
+                    .prepareStatement("INSERT INTO patient VALUES(?,?,?,?,?,?)");
             pstmt.setString(1, tfidentifiant.getText());
             pstmt.setString(2, tfnom.getText());
             pstmt.setString(3, tfprenom.getText());
@@ -65,7 +71,8 @@ public class EcranCreationPatient implements Initializable {
             RetourPat(ev);
 
         } catch (Exception e) {
-            System.out.println(e);
+            laberr.setText("Echec, Au moins un champ contient \r\n" + //
+                    "une valeurs incompatibe");
         }
     }
 
@@ -75,14 +82,17 @@ public class EcranCreationPatient implements Initializable {
         tfnom.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                // if (tfnom.getText().isBlank())
+                // return;
                 String id = ("P" + Character.toUpperCase(newValue.charAt(0)));
                 int randomNum = 0;
                 boolean inexistant = false;
                 while (inexistant == false) {
                     try (Connection conn = LienBase.OuvertureConnection()) {
-                        randomNum = ThreadLocalRandom.current().nextInt(0, 999);
+                        Random r = new Random();
+                            randomNum = r.nextInt((999 - 1) + 1) + 1;
                         PreparedStatement pstmt = conn
-                                .prepareStatement("SELECT idPatient from patients where idPatient = ?");
+                                .prepareStatement("SELECT idPatient from patient where idPatient = ?");
                         pstmt.setString(1, id + String.format("%03d", randomNum));
                         ResultSet rs = pstmt.executeQuery();
                         if (!rs.next()) {

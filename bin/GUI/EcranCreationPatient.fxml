@@ -22,7 +22,7 @@
          </font>
       </Label>
       <Button fx:id="Creer" layoutX="316.0" layoutY="346.0" mnemonicParsing="false" onAction="#Creation" prefHeight="40.0" prefWidth="276.0" text="Créer un compte patient" />
-      <Button fx:id="btretourpat" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourPat" prefHeight="24.0" prefWidth="141.0" text="Retour écran patients" textAlignment="CENTER">
+      <Button fx:id="btretourpat" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourPat" prefHeight="24.0" prefWidth="141.0" text="Retour écran patient" textAlignment="CENTER">
          <font>
             <Font size="11.0" />
          </font>
@@ -31,7 +31,7 @@
       <TextField fx:id="tfprenom" layoutX="14.0" layoutY="186.0" prefHeight="26.0" prefWidth="578.0" promptText="prénom" />
       <DatePicker fx:id="dpnaissance" layoutX="14.0" layoutY="112.0" prefHeight="26.0" prefWidth="578.0" promptText="Date de naissance" />
       <TextField fx:id="tfidentifiant" editable="false" layoutX="14.0" layoutY="299.0" prefHeight="26.0" prefWidth="578.0" promptText="identifiant" />
-      <Label fx:id="laberr" layoutX="20.0" layoutY="338.0" prefHeight="40.0" prefWidth="242.0" textFill="#f70000">
+      <Label fx:id="laberr" layoutX="323.0" layoutY="47.0" prefHeight="40.0" prefWidth="262.0" textFill="#f70000">
          <font>
             <Font size="15.0" />
          </font>

@@ -27,6 +27,14 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 
+/**
+ * La classe assigne au stage une seconde donnee qui est le cachedrowset sql
+ * contenant les informations du patients recherché
+ * Elle propose 3 plateformes de recherches différentes qui servent toutes
+ * d'intermediaires vers l'écran modif/vue patient qui permet de modifier ses informations.
+ * seul le bouton creer un patient envoie vers un autre ecran.
+ * 
+ */
 public class EcranAgent
         implements Initializable {
 
@@ -48,7 +56,7 @@ public class EcranAgent
 
     public void RemplissageInformations() throws SQLException {
         CachedRowSet rw = ((Donnees) labprof.getScene().getWindow().getUserData()).getrwLogin();
-        labprof.setText("Connecté en tant qu'agent (" + rw.getString("id") + ") ["+rw.getString("role")+"]");
+        labprof.setText("Connecté en tant qu'agent (" + rw.getString("id") + ") [" + rw.getString("role") + "]");
         if (!rw.getString("role").equals("SuperAdmin"))
             menurecherche.setVisible(false);
         MenuItem recherchepers = new MenuItem("RecherchePersonnel");
@@ -60,7 +68,7 @@ public class EcranAgent
     EventHandler<ActionEvent> eventreccpers = new EventHandler<ActionEvent>() {
         public void handle(ActionEvent ev) {
             try {
-                Interfaces.ChangementEcran(( labprof).getScene(), "AgentPers");
+                Interfaces.ChangementEcran((labprof).getScene(), "AgentPers");
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -75,13 +83,13 @@ public class EcranAgent
                 entree2 = tfprenom.getText();
                 pstmt = conn
                         .prepareStatement(
-                                "SELECT * from patients where nom = ?");
+                                "SELECT * from patient where nom = ?");
                 pstmt.setString(1, entree1);
             } else if (ev.getSource() == Examid) {
                 entree1 = tfidm.getText();
                 pstmt = conn
                         .prepareStatement(
-                                "SELECT * from patients where idPatient = ?");
+                                "SELECT * from patient where idPatient = ?");
                 pstmt.setString(1, entree1);
             }
             ResultSet rs = pstmt.executeQuery();
@@ -115,7 +123,7 @@ public class EcranAgent
         Connection conn = LienBase.OuvertureConnection();
         pstmt = conn
                 .prepareStatement(
-                        "SELECT * from patients where nom = ?");
+                        "SELECT * from patient where nom = ?");
         pstmt.setString(1, entree1);
         ResultSet rs = pstmt.executeQuery();
         RowSetFactory factory = RowSetProvider.newFactory();
@@ -135,8 +143,7 @@ public class EcranAgent
     public void initialize(URL location, ResourceBundle resources) {
         try (Connection conn = LienBase.OuvertureConnection()) {
             stmt = conn.createStatement();
-            String sql = "SELECT * FROM patients";
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery("SELECT * FROM patient");
             while (rs.next()) {
                 listreg.getItems().add(rs.getString("nom") + " " + rs.getString("prenom"));
             }
@@ -163,7 +170,7 @@ public class EcranAgent
                 try (Connection conn = LienBase.OuvertureConnection()) {
                     pstmt = conn
                             .prepareStatement(
-                                    "SELECT * from patients p, pathologie pa, malades m where pa.nom LIKE ? AND pa.idPathologie = m.idPathologie And p.idPatient = m.idPatient");
+                                    "SELECT * from patient p, pathologie pa, malade m where pa.nom LIKE ? AND pa.idPathologie = m.idPathologie And p.idPatient = m.idPatient");
                     pstmt.setString(1, newValue + "%");
                     ResultSet rs = pstmt.executeQuery();
                     while (rs.next()) {

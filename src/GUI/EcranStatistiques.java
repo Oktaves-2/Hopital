@@ -1,12 +1,12 @@
 package GUI;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
@@ -19,18 +19,30 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 
+/**
+ * La classe remplit chaque graphique a l'aide d'une requete sql dans la db et
+ * l'affiche en fonction du choix dans la liste.
+ * Chacune des graphiques utilise une classe fxml jugée adéquate, seul le
+ * graphique ChartCasParAnParPaths emploient plusieurs séries de données pour
+ * dissocier les cas par maladies
+ */
 public class EcranStatistiques implements Initializable {
 
     @FXML
     private LineChart<String, Number> ChartConsParAn;
     @FXML
+    private LineChart<String, Number> ChartAppParAn;
+
+    @FXML
     private LineChart<String, Integer> ChartCasParAnParPaths;
+
     @FXML
     private PieChart ChartConsParAge;
 
@@ -42,18 +54,21 @@ public class EcranStatistiques implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Comboboxgraph.getItems().addAll("Nombre de Consultations par tranche d'age",
+        Comboboxgraph.getItems().addAll("Nombre de consultations par tranche d'age",
                 "Nombre de cas par pathologies par annees",
-                "Nombres de consultations par an", "nombres de consultations par période de l'annee");
+                "Nombres de consultations par an", "nombres de consultations par période de l'annee",
+                "Nombres d'appareils assignes par an");
         ChartCasParAnParPaths.setVisible(false);
         ChartConsParPeriode.setVisible(false);
         ChartConsParAge.setVisible(false);
         ChartConsParAn.setVisible(false);
+        ChartAppParAn.setVisible(false);
         try {
             CasParAnParPaths();
             ConsParAn();
             ConsParAges();
             ConsParPeriodes();
+            AppParAn();
         } catch (SQLException e) {
             System.out.println(e);
 
@@ -65,8 +80,9 @@ public class EcranStatistiques implements Initializable {
         ChartConsParAn.setVisible(false);
         ChartConsParPeriode.setVisible(false);
         ChartConsParAge.setVisible(false);
+        ChartAppParAn.setVisible(false);
         switch (Comboboxgraph.getSelectionModel().getSelectedItem()) {
-            case ("Nombre de Consultations par tranche d'age"):
+            case ("Nombre de consultations par tranche d'age"):
                 ChartConsParAge.setVisible(true);
                 break;
             case ("Nombre de cas par pathologies par annees"):
@@ -78,6 +94,9 @@ public class EcranStatistiques implements Initializable {
             case ("nombres de consultations par période de l'annee"):
                 ChartConsParPeriode.setVisible(true);
                 break;
+            case ("Nombres d'appareils assignes par an"):
+                ChartAppParAn.setVisible(true);
+                break;
         }
 
     }
@@ -86,7 +105,7 @@ public class EcranStatistiques implements Initializable {
         try (Connection conn = LienBase.OuvertureConnection()) {
             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
-            String sql = "SELECT MONTH(creation) as mois FROM consultations";
+            String sql = "SELECT MONTH(creation) as mois FROM consultation";
             ResultSet rs = stmt.executeQuery(sql);
             int hiver = 0;
             int printemps = 0;
@@ -121,7 +140,7 @@ public class EcranStatistiques implements Initializable {
         try (Connection conn = LienBase.OuvertureConnection()) {
             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
-            String sql = "SELECT YEAR(naissance)as an, YEAR(c.creation) as cre from patients p, consultations c where c.idPatient = p.idPatient ";
+            String sql = "SELECT YEAR(naissance)as an, YEAR(c.creation) as cre from patient p, consultation c where c.idPatient = p.idPatient ";
             ResultSet rs = stmt.executeQuery(sql);
             int vingtcinq = 0;
             int cinquante = 0;
@@ -158,7 +177,7 @@ public class EcranStatistiques implements Initializable {
 
             TreeMap<Integer, TreeMap<String, Integer>> pathsParAns = new TreeMap<>();
             ResultSet rs = stmt.executeQuery(
-                    "SELECT COUNT(p.nom) as compte, p.nom, YEAR(c.creation) as an from pathologie p, patients pa, malades m, consultations c where pa.idPatient = m.idPatient and p.idPathologie = m.idPathologie and c.idcons = m.idcons GROUP BY an, p.nom ORDER BY an");
+                    "SELECT COUNT(p.nom) as compte, p.nom, YEAR(c.creation) as an from pathologie p, patient pa, malade m, consultation c where pa.idPatient = m.idPatient and p.idPathologie = m.idPathologie and c.idcons = m.idcons GROUP BY an, p.nom ORDER BY an");
             RowSetFactory factory = RowSetProvider.newFactory();
             CachedRowSet rw = factory.createCachedRowSet();
             rw.populate(rs);
@@ -169,8 +188,6 @@ public class EcranStatistiques implements Initializable {
                 rw.beforeFirst();
                 while (rw.next()) {
                     if (rw.getInt("an") == i) {
-                        // System.out.println(rw.getInt("an") + " " + rw.getString("nom") + " " +
-                        // rw.getInt("compte"));
                     } else if (rw.getInt("an") > i) {
                         break;
                     }
@@ -206,26 +223,13 @@ public class EcranStatistiques implements Initializable {
 
     public void ConsParAn() throws SQLException {
         try (Connection conn = LienBase.OuvertureConnection()) {
-            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
-            String sql = "SELECT YEAR(creation) as an FROM consultations";
-            ArrayList<Integer> anneescons = new ArrayList<>();
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT YEAR(creation) as an, COUNT(*) as compte FROM consultation group by YEAR(creation)";
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                anneescons.add(rs.getInt("an"));
-            }
             XYChart.Series<String, Number> Series = new XYChart.Series<>();
-            Series.setName("patients");
+            while (rs.next())
+                Series.getData().add(new XYChart.Data<>(rs.getString("an"), rs.getInt("compte")));
 
-            for (int i = 2018; i < 2023; i++) {
-                int compteur = 0;
-                for (int a = 0; a < anneescons.size(); a++) {
-                    if (anneescons.get(a) == i) {
-                        compteur = compteur + 1;
-                    }
-                }
-                Series.getData().add(new XYChart.Data<>(Integer.toString(i), compteur));
-            }
             try {
                 ChartConsParAn.getData().add(Series);
             } catch (Exception e) {
@@ -234,6 +238,29 @@ public class EcranStatistiques implements Initializable {
             LienBase.FermetureConnection(conn);
         }
 
+    }
+
+    public void AppParAn() throws SQLException {
+        try (Connection conn = LienBase.OuvertureConnection()) {
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT YEAR(creation) as an, COUNT(*) as compte FROM consultation WHERE assignation_appareil IS NOT NULL group by YEAR(creation)";
+            ResultSet rs = stmt.executeQuery(sql);
+            XYChart.Series<String, Number> Series = new XYChart.Series<>();
+            while (rs.next())
+                Series.getData().add(new XYChart.Data<>(rs.getString("an"), rs.getInt("compte")));
+
+            try {
+                ChartAppParAn.getData().add(Series);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            LienBase.FermetureConnection(conn);
+        }
+
+    }
+
+    public void Retour(ActionEvent ev) throws IOException, SQLException {
+        Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "Login");
     }
 
 }

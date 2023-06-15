@@ -27,14 +27,19 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 
+/**
+ * La classe est un simili de la classe Ecran agent qui cette fois, permet de
+ * traiter du personnel, il est possible d'alterner entre les deux ecrans via un
+ * bouton qui n'est visible que si l'agent qui se connecte a le role superAdmin. 
+ */
 public class EcranAgentPers
         implements Initializable {
 
     @FXML
-    private TextField tfnom, tfprenom, tfidm;
+    private TextField tfnom, tfprenom, tfidm, tfprof;
 
     @FXML
-    private Label laberreurmed, labprof;
+    private Label laberr, labprof;
     @FXML
     private ListView<String> listreg;
     @FXML
@@ -90,7 +95,7 @@ public class EcranAgentPers
             rw.populate(rs);
             ((Donnees) labprof.getScene().getWindow().getUserData()).setrwPat(rw);
             rw.next();
-            if (entree1.equals(rw.getString("idPatient")) || entree2.equals(rw.getString("prenom"))) {
+            if (entree1.equals(rw.getString("id")) || entree2.equals(rw.getString("prenom"))) {
                 LienBase.FermetureConnection(conn);
                 Interfaces.ChangementEcran(((Node) ev.getSource()).getScene(), "ModifVuePers");
                 return 0;
@@ -98,7 +103,7 @@ public class EcranAgentPers
         } catch (Exception e) {
             System.out.println(e);
         }
-        laberreurmed.setText("Aucun compte existant pour ces coordones");
+        laberr.setText("Aucun compte existant pour ces coordones");
         LienBase.FermetureConnection(conn);
         return -1;
     }
@@ -153,6 +158,38 @@ public class EcranAgentPers
                 }
             });
         } catch (SQLException e) {
+            System.out.println(e);
+        }
+        try {
+            tfprof.textProperty().addListener(new ChangeListener<String>() {
+
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    listreg.getItems().clear();
+                    try (Connection conn = LienBase.OuvertureConnection()) {
+                        pstmt = conn
+                                .prepareStatement(
+                                        "SELECT * from personnel where profession LIKE ?");
+                        pstmt.setString(1, newValue + "%");
+                        ResultSet rs = pstmt.executeQuery();
+                        while (rs.next()) {
+                            if (newValue.trim().isEmpty()) {
+                                listreg.getItems().add(
+                                        rs.getString("nom") + " " + rs.getString("prenom"));
+                            } else {
+                                listreg.getItems().add(
+                                        rs.getString("nom") + " " + rs.getString("prenom") + " ("
+                                                + rs.getString("profession") + ")");
+                            }
+                        }
+                        LienBase.FermetureConnection(conn);
+
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+            });
+        } catch (Exception e) {
             System.out.println(e);
         }
     }

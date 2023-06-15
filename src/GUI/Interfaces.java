@@ -9,6 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * La classe Interfaces sert a lancer l'application et centralise par la methode
+ * changementEcran le passage d'une scene a une autre en fonction d'un string pris en parametre,
+ *  chaque ecran est nomme en relation avec la profession qui lui correspond.
+ */
 public class Interfaces extends Application {
 
     public static void main(String[] args) {
@@ -101,6 +106,9 @@ public class Interfaces extends Application {
                     EcranModifierInformationsPers ecranModifierInformationsPers = loader.getController();
                     ecranModifierInformationsPers.RemplissageInformations();
                     break;
+                case ("Technicien"):
+                    EcranTechnicien ecranTechnicien = loader.getController();
+                    ecranTechnicien.RemplissageInformations();
 
             }
         } catch (

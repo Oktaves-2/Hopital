@@ -5,14 +5,15 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="628.0" prefWidth="1010.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.EcranStatistiques">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.EcranStatistiques">
    <children>
-      <LineChart fx:id="ChartCasParAnParPaths" layoutX="39.0" layoutY="156.0" prefHeight="450.0" prefWidth="830.0" title="Nombres de Cas par Pathologies par An">
+      <LineChart fx:id="ChartCasParAnParPaths" layoutX="25.0" layoutY="150.0" prefHeight="430.0" prefWidth="700.0" title="Nombres de Cas par Pathologies par An">
          <xAxis>
             <CategoryAxis label="Années" side="BOTTOM" />
          </xAxis>
@@ -20,12 +21,12 @@
             <NumberAxis label="Nombre de cas" side="LEFT" upperBound="10.0" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="ChartConsParAn" layoutX="26.0" layoutY="165.0" prefHeight="441.0" prefWidth="931.0" title="Nombres de consultations par An">
+      <LineChart fx:id="ChartConsParAn" layoutX="25.0" layoutY="150.0" prefHeight="430.0" prefWidth="700.0" title="Nombres de consultation par An">
         <xAxis>
           <CategoryAxis label="Années" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis label="Nombres de consultations" side="LEFT" upperBound="10.0" />
+          <NumberAxis label="Nombres de consultation" side="LEFT" upperBound="10.0" />
         </yAxis>
       </LineChart>
       <ComboBox fx:id="Comboboxgraph" layoutX="75.0" layoutY="126.0" onAction="#ChoixGraphique" prefHeight="27.0" prefWidth="294.0" promptText="Graphique Choisi" />
@@ -34,8 +35,8 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <PieChart fx:id="ChartConsParAge" layoutX="58.0" layoutY="174.0" prefHeight="442.0" prefWidth="574.0" title="Nombres de consultations par tranches d'âge" />
-      <BarChart fx:id="ChartConsParPeriode" layoutX="14.0" layoutY="183.0" prefHeight="424.0" prefWidth="729.0" title="Nombres de consultations par période">
+      <PieChart fx:id="ChartConsParAge" layoutX="25.0" layoutY="150.0" prefHeight="430.0" prefWidth="700.0" title="Pourcentages de consultation par tranches d'âge" />
+      <BarChart fx:id="ChartConsParPeriode" layoutX="25.0" layoutY="150.0" prefHeight="430.0" prefWidth="700.0" title="Nombres de consultation par période">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -43,5 +44,14 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
+      <Button layoutX="605.0" layoutY="14.0" mnemonicParsing="false" onAction="#Retour" prefHeight="27.0" prefWidth="110.0" text="Retour login" />
+      <LineChart fx:id="ChartAppParAn" layoutX="25.0" layoutY="150.0" prefHeight="430.0" prefWidth="700.0" title="Nombres d'appareils assignes par an">
+         <xAxis>
+            <CategoryAxis label="Années" side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis label="Nombres de consultation" side="LEFT" upperBound="10.0" />
+         </yAxis>
+      </LineChart>
    </children>
 </AnchorPane>

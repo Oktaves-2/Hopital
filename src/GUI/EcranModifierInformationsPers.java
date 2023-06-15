@@ -24,6 +24,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * Cet ecran permet de modifier les informations d'un patient, l'identifiant est
+ * une valeur immuable, acceder à cet ecran demande le role SuperAdmin.
+ * les modifications sont insérées dans la table. Les champs nuls ne sont pas
+ * traités.
+ */
 public class EcranModifierInformationsPers implements Initializable {
     @FXML
     private DatePicker dpnaissance1;

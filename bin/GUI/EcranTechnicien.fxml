@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.EcranTechnicien">
+   <children>
+      <Label fx:id="labtitre" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="34.0" prefWidth="234.0" text="Hopital de poche">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="labprof" layoutX="15.0" layoutY="33.0" prefHeight="34.0" prefWidth="353.0" text="Connecté en tant que technicien">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <ListView fx:id="listcons" layoutX="14.0" layoutY="107.0" prefHeight="103.0" prefWidth="579.0" />
+      <TextField fx:id="tfid" layoutX="14.0" layoutY="210.0" prefHeight="26.0" prefWidth="579.0" promptText="Filtrer par idPatient" />
+      <Button fx:id="btretourlog" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourLog" prefHeight="24.0" prefWidth="141.0" text="Retour  écran login" textAlignment="CENTER">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <Label fx:id="labmulti" alignment="CENTER" contentDisplay="CENTER" layoutX="71.0" layoutY="79.0" prefHeight="27.0" prefWidth="492.0" text="Selectionnez une consultation pour octroyer un appareil" textAlignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ListView fx:id="listapp" layoutX="14.0" layoutY="269.0" prefHeight="120.0" prefWidth="579.0" />
+      <Label fx:id="labapp" alignment="CENTER" contentDisplay="CENTER" layoutX="71.0" layoutY="236.0" prefHeight="27.0" prefWidth="492.0" text="Octroyer un appareil pour cette consultation parmi ceux disponibles" textAlignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

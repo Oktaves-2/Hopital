@@ -31,7 +31,7 @@
       <TextField fx:id="tfprenom" layoutX="13.0" layoutY="230.0" prefHeight="26.0" prefWidth="578.0" promptText="prénom" />
       <DatePicker fx:id="dpnaissance" layoutX="13.0" layoutY="164.0" prefHeight="26.0" prefWidth="578.0" promptText="Date de naissance" />
       <TextField fx:id="tfidentifiant" editable="false" layoutX="13.0" layoutY="332.0" prefHeight="24.0" prefWidth="578.0" promptText="identifiant" />
-      <Label fx:id="laberr" layoutX="20.0" layoutY="338.0" prefHeight="40.0" prefWidth="242.0" textFill="#f70000">
+      <Label fx:id="laberr" layoutX="337.0" layoutY="45.0" prefHeight="78.0" prefWidth="254.0" textAlignment="CENTER" textFill="#f70000">
          <font>
             <Font size="15.0" />
          </font>

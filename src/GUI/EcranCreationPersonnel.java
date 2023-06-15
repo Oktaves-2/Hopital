@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,6 +24,17 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * Cette classe est similaire a la classe creationpatient à l'exception que
+ * puisque celle ci permet une insertion dans la table personnel elle demande un
+ * role
+ * superAdmin. en plus du nom du membre et d'un integer aléatoire, l'identifiant
+ * utilise la premiere
+ * lettre de leur profession ce qui nécessite d'écouter les changement de chacun
+ * des deux textfield (a travers un seul changelistener )
+ * a la maniere du fonctionnement de plusieurs sites modernes, le mot de passe
+ * est généré aléatoirement de manière opaque à partir de données du patient.
+ */
 public class EcranCreationPersonnel implements Initializable {
     @FXML
     private DatePicker dpnaissance;
@@ -58,7 +70,8 @@ public class EcranCreationPersonnel implements Initializable {
             pstmt.setString(6, tfemail.getText());
             int randomNum = 0;
             randomNum = ThreadLocalRandom.current().nextInt(0, 999);
-            pstmt.setString(7, tfprenom.getText().charAt(tfprenom.getText().length()-1) + randomNum + "" + tfnom.getText().charAt(0));
+            pstmt.setString(7, tfprenom.getText().charAt(tfprenom.getText().length() - 1) + randomNum + ""
+                    + tfnom.getText().charAt(0));
             pstmt.setString(8, tfprof.getText());
             pstmt.setString(9, tfrole.getText());
             pstmt.executeUpdate();
@@ -70,40 +83,49 @@ public class EcranCreationPersonnel implements Initializable {
             RetourPat(ev);
 
         } catch (Exception e) {
-            System.out.println(e);
+            laberr.setText("Echec, Au moins un champ contient \r\n" + //
+                    "une valeurs incompatibe");
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ChangeListener<String> cl = new ChangeListener<String>() {
 
-        tfnom.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (tfprof.getText().trim().isEmpty())
-
-                    return;
-                String id = (tfprof.getText().charAt(0) + "" + Character.toUpperCase(newValue.charAt(0)));
-                int randomNum = 0;
-                boolean inexistant = false;
-                while (inexistant == false) {
-                    try (Connection conn = LienBase.OuvertureConnection()) {
-                        randomNum = ThreadLocalRandom.current().nextInt(0, 999);
-                        PreparedStatement pstmt = conn
-                                .prepareStatement("SELECT idPatient from patients where idPatient = ?");
-                        pstmt.setString(1, id + String.format("%03d", randomNum));
-                        ResultSet rs = pstmt.executeQuery();
-                        if (!rs.next()) {
-                            inexistant = true;
-                            id = id + String.format("%03d", randomNum);
+                try {
+                    if (tfprof.getText().trim().isEmpty() || tfnom.getText().trim().isEmpty())
+                        return;
+                    String id = (Character.toUpperCase(tfprof.getText().charAt(0)) + ""
+                            + Character.toUpperCase(tfnom.getText().charAt(0)));
+                    int randomNum = 0;
+                    boolean inexistant = false;
+                    while (inexistant == false) {
+                        try (Connection conn = LienBase.OuvertureConnection()) {
+                            Random r = new Random();
+                            randomNum = r.nextInt((999 - 1) + 1) + 1;
+                            PreparedStatement pstmt = conn
+                                    .prepareStatement("SELECT id from personnel where id = ?");
+                            pstmt.setString(1, id + String.format("%03d", randomNum));
+                            ResultSet rs = pstmt.executeQuery();
+                            if (!rs.next()) {
+                                inexistant = true;
+                                id = id + String.format("%03d", randomNum);
+                            }
+                        } catch (SQLException e) {
+                            System.out.println(e);
                         }
-                    } catch (SQLException e) {
-                        System.out.println(e);
                     }
+                    tfidentifiant.setText(id);
+                } catch (Exception e) {
+
                 }
-                tfidentifiant.setText(id);
             }
-        });
+        };
+
+        tfnom.textProperty().addListener(cl);
+        tfprof.textProperty().addListener(cl);
     }
 
     public void RetourPat(ActionEvent ev) throws IOException, SQLException {

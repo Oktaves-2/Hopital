@@ -24,6 +24,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * Cet ecran permet de modifier les informations d'un patient, l'identifiant est
+ * une valeur immuable, acceder à cet ecran ne demande aucune permission
+ * specifique autre que l'attribut agent. Les champs nuls ne sont pas
+ * traités. les modifications sont insérées dans la table
+ */
 public class EcranModifierInformations implements Initializable {
     @FXML
     private DatePicker dpnaissance1;
@@ -55,7 +61,7 @@ public class EcranModifierInformations implements Initializable {
             Connection conn = LienBase.OuvertureConnection();
             PreparedStatement pstmt = conn
                     .prepareStatement(
-                            "UPDATE patients set nom = ?, prenom = ?, naissance = ?, adresse = ?, email = ? where idPatient = ?");
+                            "UPDATE patient set nom = ?, prenom = ?, naissance = ?, adresse = ?, email = ? where idPatient = ?");
             if (tfnom1.getText().trim().isEmpty())
                 pstmt.setString(1, tfnom.getText());
             else
@@ -104,7 +110,7 @@ public class EcranModifierInformations implements Initializable {
                     try (Connection conn = LienBase.OuvertureConnection()) {
                         randomNum = ThreadLocalRandom.current().nextInt(0, 999);
                         PreparedStatement pstmt = conn
-                                .prepareStatement("SELECT idPatient from patients where idPatient = ?");
+                                .prepareStatement("SELECT idPatient from patient where idPatient = ?");
                         pstmt.setString(1, id + String.format("%03d", randomNum));
                         ResultSet rs = pstmt.executeQuery();
                         if (!rs.next()) {

@@ -17,6 +17,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import Base.*;
 
+/**
+ * La classe effectue une recherche SQl pour chercher une correspondance avec un
+ * compte de la db si le compte existe,
+ * le resulset de la requete est converti en cachedrowset
+ * afin de pouvoir être accedé dans les ecrans suivi apres avoir ferme la
+ * connexion avec la baseresulte de la recherche SQL est assigne
+ * au stage fxml par la methode setuserdata afin de conserver en continu les
+ * informations du compte actif.
+ */
 public class EcranLogin {
 
     @FXML

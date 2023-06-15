@@ -11,7 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 import Base.LienBase;
-
+/**
+ * Cet ecran au faible nombre de methodes est juste un intermediaire vers
+ * l'ecran permettant de modifier les informations d'un patient supprimer un
+ * patien ne necessite le lancement d'aucun ecran et renvoi donc au
+ * precedent
+ */
 public class EcranModifVuePatient {
     @FXML
     private Label labcoordones, labprof;
@@ -37,7 +42,7 @@ public class EcranModifVuePatient {
         try {
             Connection conn = LienBase.OuvertureConnection();
             PreparedStatement pstmt = conn
-                    .prepareStatement("DELETE FROM patients where idPatient = ?");
+                    .prepareStatement("DELETE FROM patient where idPatient = ?");
             String id = "";
             id = labcoordones.getText();
             id = id.substring(id.lastIndexOf("(") + 1, id.lastIndexOf(")"));

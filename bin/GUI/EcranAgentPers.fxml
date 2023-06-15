@@ -41,7 +41,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <ListView fx:id="listreg" layoutX="14.0" layoutY="190.0" prefHeight="198.0" prefWidth="200.0" />
+      <ListView fx:id="listreg" layoutX="14.0" layoutY="190.0" prefHeight="178.0" prefWidth="200.0" />
       <Button fx:id="Creer" layoutX="242.0" layoutY="348.0" mnemonicParsing="false" onAction="#CreerCompte" prefHeight="40.0" prefWidth="339.0" text="Créer un compte de personnel" />
       <Button fx:id="btretourlog" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourLog" prefHeight="24.0" prefWidth="141.0" text="Retour  écran login" textAlignment="CENTER">
          <font>
@@ -54,5 +54,11 @@
           <MenuItem mnemonicParsing="false" text="Action 2" />
         </items>
       </MenuButton>
+      <TextField fx:id="tfprof" layoutX="14.0" layoutY="368.0" prefHeight="26.0" prefWidth="200.0" promptText="Filtrer par profession" />
+      <Label fx:id="laberr" layoutX="248.0" layoutY="66.0" prefHeight="54.0" prefWidth="339.0" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

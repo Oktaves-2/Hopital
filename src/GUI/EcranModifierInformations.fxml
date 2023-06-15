@@ -22,7 +22,7 @@
          </font>
       </Label>
       <Button fx:id="Maj" layoutX="315.0" layoutY="353.0" mnemonicParsing="false" onAction="#MiseAJour" prefHeight="40.0" prefWidth="276.0" text="Mettre le patient à jour" />
-      <Button fx:id="btretourpat" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourPat" prefHeight="24.0" prefWidth="141.0" text="Retour écran patients" textAlignment="CENTER">
+      <Button fx:id="btretourpat" layoutX="450.0" layoutY="6.0" mnemonicParsing="false" onAction="#RetourPat" prefHeight="24.0" prefWidth="141.0" text="Retour écran patient" textAlignment="CENTER">
          <font>
             <Font size="11.0" />
          </font>
