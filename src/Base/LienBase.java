@@ -2,11 +2,16 @@ package Base;
 
 import java.sql.*;
 
+/**
+ * Cette classe contient simplement les methodes statiques ouvertures et
+ * fermeture Connection qui
+ * simplifient l'utilisation recurrente de requetes sql.
+ * 
+ */
 public class LienBase {
 
 	private static Connection conn = null;
 
-	
 	public static Connection OuvertureConnection() throws SQLException {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -23,7 +28,6 @@ public class LienBase {
 				conn.close();
 			}
 		} catch (SQLException e) {
-			// Exception ignoree
 		}
 	}
 }

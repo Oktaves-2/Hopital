@@ -24,10 +24,13 @@ import javafx.scene.control.TextField;
 /**
  * La classe alterne entre deux listview,la methode selectionlistecons() fait
  * apparaitre la deuxieme en fonction d'un resultat sql
- * et la methode selectionlistapp update les tables appareils et consultations
- * de la db. il a ete necessaire d'implementer la methode runlater de la classe
- * runnable car modifier la listview depuis un thread non main entrainait une
- * exception.
+ * de la selection d'un appareil dans la deuxieme liste la methode
+ * selectionlistapp update l'attribut statut_appareil de la table consultation a
+ * "assigné", et l'appareil assigné voit ses attributs idpatient et octroyé (un
+ * boolean)
+ * update égalements. il a ete necessaire d'implementer la methode runlater de
+ * la classe runnable dans le changelistener de la premiere liste car modifier
+ * la listview depuis un thread non main entrainait une exception.
  */
 public class EcranTechnicien implements Initializable {
 

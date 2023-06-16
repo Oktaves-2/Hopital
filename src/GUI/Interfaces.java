@@ -6,13 +6,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
  * La classe Interfaces sert a lancer l'application et centralise par la methode
- * changementEcran le passage d'une scene a une autre en fonction d'un string pris en parametre,
- *  chaque ecran est nomme en relation avec la profession qui lui correspond.
+ * changementEcran le passage d'une scene a une autre en fonction d'un string
+ * pris en parametre,
+ * chaque ecran est nomme en relation avec la profession qui lui correspond.
  */
 public class Interfaces extends Application {
 
@@ -28,9 +28,6 @@ public class Interfaces extends Application {
             FXMLLoader loader = new FXMLLoader(Interfaces.class.getResource("EcranLogin.fxml"));
             Parent root = loader.load();
             Scene scenelog = new Scene(root);
-            Image image = new Image("C:/Users/Oktaves/Documents/Code/Java/L2/Hopital/Autres/cat.jpg");
-            // Image image2 = new Image ("Autres/cat.jpg");
-            stage.getIcons().add(image);
             scenelog.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
             stage.setScene(scenelog);
             try {

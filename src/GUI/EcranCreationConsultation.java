@@ -30,8 +30,9 @@ import javafx.scene.control.TextField;
  * il ne necessite pas de changelistener et le textfield contenant l'id est
  * defini une seule fois à l'ouverture de l'ecran. La classe export imprime dans
  * la console plutôt qu'en sortie fichier pour une portabilité du projet
- * simplifié relativement aux accès et chemins de sortie. 
- * 
+ * simplifié relativement aux accès et chemins de sortie. si un appareil est
+ * assigné la consultation a l'attribut a_assigner avant que le technicien ne
+ * l'octroye, sans appareil assigné l'attribut est null par défaut
  */
 public class EcranCreationConsultation {
 
